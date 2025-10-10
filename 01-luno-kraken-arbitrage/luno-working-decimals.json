@@ -1,0 +1,14 @@
+{
+  "base": {
+    "USDTNGN": 18,
+    "SOLUSDT": 4,
+    "XRPNGN": 0
+  },
+  "counter": {
+    "XRPNGN": 2,
+    "SOLNGN": 2,
+    "XRPUSDT": 2,
+    "USDTNGN": 2,
+    "DOGENGN": 2
+  }
+}
