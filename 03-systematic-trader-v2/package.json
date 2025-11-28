@@ -1,0 +1,34 @@
+{
+  "name": "systematic-trading-bot-v2",
+  "version": "2.0.0",
+  "description": "Institutional-grade systematic trading bot with multi-timeframe analysis, regime detection, and Kelly Criterion position sizing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "backtest": "node run-backtest.js",
+    "test": "node run-backtest.js --days 7",
+    "dev": "NODE_ENV=development node index.js"
+  },
+  "keywords": [
+    "trading",
+    "bot",
+    "crypto",
+    "systematic",
+    "algorithmic",
+    "quantitative",
+    "institutional",
+    "kelly-criterion",
+    "regime-detection"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ccxt": "^4.1.0",
+    "node-telegram-bot-api": "^0.64.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

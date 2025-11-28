@@ -1,0 +1,2017 @@
+╔════════════════════════════════════════════════════════════╗
+║              SYSTEMATIC TRADING BOT BACKTEST               ║
+╚════════════════════════════════════════════════════════════╝
+
+📅 Testing period: 90 days
+📊 Testing all configured pairs
+
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+🧠 Testing 3 strategies
+
+
+📈 Testing BTC/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 300 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.7 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.3 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.2 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.6 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.6 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.39 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.61 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.82 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: BTC/USD
+   RANGING → WEAK_TREND
+   ADX: 15.94 → 23.95
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.74 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.54 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.14 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: BTC/USD
+   WEAK_TREND → TRENDING
+   ADX: 21.55 → 26.64
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: BTC/USD
+   TRENDING → WEAK_TREND
+   ADX: 25.24 → 22.10
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.21 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.19 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: BTC/USD
+   WEAK_TREND → RANGING
+   ADX: 22.10 → 17.15
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.02 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: BTC/USD
+   RANGING → WEAK_TREND
+   ADX: 17.15 → 21.38
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.07 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: BTC/USD
+   WEAK_TREND → RANGING
+   ADX: 21.38 → 19.69
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.03 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.17 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: BTC/USD
+   RANGING → TRENDING
+   ADX: 11.69 → 29.72
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: BTC/USD
+   TRENDING → RANGING
+   ADX: 29.72 → 8.92
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.47 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.67 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.88 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.94 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.04 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.04 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.27 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.47 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: BTC/USD
+   RANGING → TRENDING
+   ADX: 15.91 → 37.58
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: BTC/USD
+   TRENDING → RANGING
+   ADX: 37.58 → 3.15
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.9 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.9 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: BTC/USD
+   RANGING → WEAK_TREND
+   ADX: 3.15 → 22.90
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: BUY (conf: 74.4%, z-score: -2.94)
+
+🔄 REGIME CHANGE: BTC/USD
+   WEAK_TREND → STRONG_TREND
+   ADX: 22.90 → 46.08
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+   Results for BTC/USD:
+   Trades: 1
+   Win Rate: 0.0%
+   Profit Factor: N/A
+   Total PnL: $-0.71
+   Max Drawdown: 0.01%
+
+📈 Testing ETH/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 300 candles
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: ETH/USD
+   TRENDING → RANGING
+   ADX: 38.01 → 2.79
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 4.4 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.73 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.35 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.40 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.74 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.71 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.73 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.15 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: ETH/USD
+   RANGING → STRONG_TREND
+   ADX: 1.94 → 43.45
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+
+🔄 REGIME CHANGE: ETH/USD
+   STRONG_TREND → TRENDING
+   ADX: 41.11 → 39.22
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: ETH/USD
+   TRENDING → STRONG_TREND
+   ADX: 39.51 → 43.23
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+
+🔄 REGIME CHANGE: ETH/USD
+   STRONG_TREND → EXTREME_TREND
+   ADX: 59.35 → 60.99
+   Extreme trend - Reduced size momentum only
+
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in EXTREME_TREND regime
+
+🔄 REGIME CHANGE: ETH/USD
+   EXTREME_TREND → STRONG_TREND
+   ADX: 60.99 → 45.60
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: SELL (confidence: 91.9%)
+
+   Results for ETH/USD:
+   Trades: 0
+   Win Rate: 0.0%
+   Profit Factor: N/A
+   Total PnL: $0.00
+   Max Drawdown: 0.00%
+
+📈 Testing SOL/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 300 candles
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → RANGING
+   ADX: 38.28 → 17.93
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.26 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.66 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: SOL/USD
+   RANGING → TRENDING
+   ADX: 17.93 → 25.73
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → RANGING
+   ADX: 30.52 → 17.60
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.26 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.75 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.91 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.31 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.07 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: SOL/USD
+   RANGING → TRENDING
+   ADX: 17.00 → 28.72
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: SELL (confidence: 91.1%)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → WEAK_TREND
+   ADX: 39.91 → 24.34
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -2.76 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: SOL/USD
+   WEAK_TREND → RANGING
+   ADX: 24.34 → 5.40
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.65 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.07 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.01 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.60 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.60 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -2.36 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -2.03 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.43 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.26 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.16 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.81 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.50 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.04 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: SOL/USD
+   RANGING → TRENDING
+   ADX: 17.12 → 25.80
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → RANGING
+   ADX: 27.64 → 9.66
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.10 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.21 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.44 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.77 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.38 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.03 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.25 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.24 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.02 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.15 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: SOL/USD
+   RANGING → TRENDING
+   ADX: 19.96 → 26.86
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → RANGING
+   ADX: 25.69 → 14.36
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.83 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.78 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.88 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: SOL/USD
+   RANGING → TRENDING
+   ADX: 6.71 → 25.50
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → RANGING
+   ADX: 25.50 → 4.20
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.08 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.20 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.30 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.25 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.22 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.12 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.26 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.40 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.14 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.01 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.09 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.10 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.22 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.04 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.40 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.47 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.33 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: SOL/USD
+   RANGING → TRENDING
+   ADX: 15.06 → 25.80
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: SOL/USD
+   TRENDING → STRONG_TREND
+   ADX: 36.04 → 44.31
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+
+🔄 REGIME CHANGE: SOL/USD
+   STRONG_TREND → WEAK_TREND
+   ADX: 44.31 → 24.14
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.87 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.26 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.23 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: SOL/USD
+   WEAK_TREND → TRENDING
+   ADX: 24.14 → 32.32
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+   Results for SOL/USD:
+   Trades: 1
+   Win Rate: 100.0%
+   Profit Factor: N/A
+   Total PnL: $4.75
+   Max Drawdown: 0.00%
+
+📈 Testing XRP/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 300 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.56 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.48 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: XRP/USD
+   RANGING → WEAK_TREND
+   ADX: 14.89 → 21.86
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] FAILED: Half-life 266.2 outside range 5-200
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.69 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: XRP/USD
+   WEAK_TREND → RANGING
+   ADX: 23.78 → 5.31
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.37 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.23 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.16 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.98 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: XRP/USD
+   RANGING → WEAK_TREND
+   ADX: 15.26 → 23.64
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.69 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.78 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: XRP/USD
+   WEAK_TREND → RANGING
+   ADX: 23.64 → 11.88
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.97 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.08 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.21 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.12 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.17 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.23 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.14 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.19 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.21 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: XRP/USD
+   RANGING → WEAK_TREND
+   ADX: 8.35 → 20.15
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.31 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.24 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.21 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: XRP/USD
+   WEAK_TREND → RANGING
+   ADX: 21.45 → 10.75
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.03 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.96 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.76 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.00 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.86 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.86 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.77 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.76 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: XRP/USD
+   RANGING → TRENDING
+   ADX: 13.85 → 38.86
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+🔄 REGIME CHANGE: XRP/USD
+   TRENDING → EXTREME_TREND
+   ADX: 38.86 → 61.73
+   Extreme trend - Reduced size momentum only
+
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in EXTREME_TREND regime
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in EXTREME_TREND regime
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in EXTREME_TREND regime
+
+🔄 REGIME CHANGE: XRP/USD
+   EXTREME_TREND → STRONG_TREND
+   ADX: 61.99 → 47.09
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+
+🔄 REGIME CHANGE: XRP/USD
+   STRONG_TREND → TRENDING
+   ADX: 47.09 → 37.50
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 80.2%)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+   Results for XRP/USD:
+   Trades: 2
+   Win Rate: 0.0%
+   Profit Factor: N/A
+   Total PnL: $-6.96
+   Max Drawdown: 0.07%
+
+📈 Testing ADA/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 300 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.01 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.99 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.29 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.08 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.07 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.31 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.11 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.13 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.98 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.84 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.42 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: ADA/USD
+   RANGING → WEAK_TREND
+   ADX: 18.40 → 23.14
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.39 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.32 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.29 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: ADA/USD
+   WEAK_TREND → RANGING
+   ADX: 20.63 → 17.83
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.18 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.24 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.14 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.16 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.98 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.00 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.50 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.57 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.48 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.50 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: ADA/USD
+   RANGING → WEAK_TREND
+   ADX: 16.76 → 23.85
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.33 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.39 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: ADA/USD
+   WEAK_TREND → TRENDING
+   ADX: 20.18 → 27.16
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: ADA/USD
+   TRENDING → WEAK_TREND
+   ADX: 27.16 → 23.29
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.37 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: ADA/USD
+   WEAK_TREND → RANGING
+   ADX: 23.29 → 15.70
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.40 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.42 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.54 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: ADA/USD
+   RANGING → TRENDING
+   ADX: 1.39 → 25.46
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+   Results for ADA/USD:
+   Trades: 0
+   Win Rate: 0.0%
+   Profit Factor: N/A
+   Total PnL: $0.00
+   Max Drawdown: 0.00%
+
+📈 Testing DOGE/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 299 candles
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: DOGE/USD
+   TRENDING → WEAK_TREND
+   ADX: 33.43 → 21.92
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.58 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.52 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.46 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.39 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   WEAK_TREND → TRENDING
+   ADX: 24.05 → 27.04
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: DOGE/USD
+   TRENDING → RANGING
+   ADX: 28.56 → 13.34
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.40 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.48 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.95 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   RANGING → WEAK_TREND
+   ADX: 17.42 → 21.64
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.81 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   WEAK_TREND → RANGING
+   ADX: 21.64 → 18.38
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.88 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.62 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.63 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.56 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.75 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   RANGING → WEAK_TREND
+   ADX: 18.83 → 22.54
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.79 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   WEAK_TREND → TRENDING
+   ADX: 22.54 → 31.78
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: DOGE/USD
+   TRENDING → RANGING
+   ADX: 31.78 → 19.74
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.51 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.53 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.43 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.39 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.55 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.23 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.15 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   RANGING → WEAK_TREND
+   ADX: 16.72 → 23.81
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.36 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.23 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   WEAK_TREND → TRENDING
+   ADX: 23.81 → 38.90
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: DOGE/USD
+   TRENDING → RANGING
+   ADX: 38.90 → 15.30
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.42 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.07 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.05 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.21 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.82 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.46 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.06 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   RANGING → WEAK_TREND
+   ADX: 14.77 → 22.47
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.19 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   WEAK_TREND → TRENDING
+   ADX: 22.47 → 39.07
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+
+🔄 REGIME CHANGE: DOGE/USD
+   TRENDING → STRONG_TREND
+   ADX: 39.07 → 43.58
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   STRONG_TREND → RANGING
+   ADX: 43.58 → 6.74
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.79 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.15 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -1.24 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.71 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.45 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.25 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: -0.27 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.08 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.14 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   RANGING → WEAK_TREND
+   ADX: 4.48 → 24.98
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.69 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: DOGE/USD
+   WEAK_TREND → TRENDING
+   ADX: 24.98 → 27.69
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: SELL (confidence: 91.0%)
+
+   Results for DOGE/USD:
+   Trades: 0
+   Win Rate: 0.0%
+   Profit Factor: N/A
+   Total PnL: $0.00
+   Max Drawdown: 0.00%
+
+📈 Testing LTC/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 299 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.30 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.59 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.47 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.27 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.30 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.19 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: LTC/USD
+   RANGING → WEAK_TREND
+   ADX: 19.78 → 21.96
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.14 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: LTC/USD
+   WEAK_TREND → RANGING
+   ADX: 21.96 → 13.64
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.35 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.32 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.99 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: LTC/USD
+   RANGING → WEAK_TREND
+   ADX: 18.66 → 20.74
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.95 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.05 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: LTC/USD
+   WEAK_TREND → RANGING
+   ADX: 20.74 → 15.59
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.87 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.97 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.77 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.55 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.57 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.39 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.27 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: LTC/USD
+   RANGING → WEAK_TREND
+   ADX: 15.83 → 21.69
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.29 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.22 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: LTC/USD
+   WEAK_TREND → TRENDING
+   ADX: 21.69 → 27.55
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+🔄 REGIME CHANGE: LTC/USD
+   TRENDING → STRONG_TREND
+   ADX: 32.95 → 58.82
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in STRONG_TREND regime
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+   Results for LTC/USD:
+   Trades: 1
+   Win Rate: 0.0%
+   Profit Factor: N/A
+   Total PnL: $-2.16
+   Max Drawdown: 0.02%
+
+📈 Testing LINK/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
+   ✓ Loaded 299 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.82 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.06 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.85 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.72 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.62 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: LINK/USD
+   RANGING → TRENDING
+   ADX: 14.42 → 25.11
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+
+🔄 REGIME CHANGE: LINK/USD
+   TRENDING → RANGING
+   ADX: 25.37 → 16.13
+   Weak/sideways market - Mean reversion only
+
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 0.97 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in RANGING regime
+
+🔄 REGIME CHANGE: LINK/USD
+   RANGING → WEAK_TREND
+   ADX: 16.13 → 22.99
+   Emerging trend - Cautious momentum + mean reversion
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [MeanRev] Starting evaluation: 201 candles, price: undefined
+      [MeanRev] Evaluation complete: HOLD (z-score: 1.08 not extreme enough)
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] FAILED: Not allowed in WEAK_TREND regime
+
+🔄 REGIME CHANGE: LINK/USD
+   WEAK_TREND → TRENDING
+   ADX: 22.99 → 32.42
+   Strong trend - Full momentum strategies
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: HOLD 
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Volatility] Starting evaluation: 201 candles
+      [Volatility] Evaluation complete: HOLD (no squeeze release detected)
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: SELL (confidence: 92.9%)
+
+🔄 REGIME CHANGE: LINK/USD
+   TRENDING → STRONG_TREND
+   ADX: 33.54 → 42.50
+   Very strong trend - Aggressive momentum
+
+      [Momentum] Starting evaluation: primary 201 candles, higher 201 candles
+      [Momentum] Evaluation complete: BUY (confidence: 90.0%)
+
+   Results for LINK/USD:
+   Trades: 1
+   Win Rate: 100.0%
+   Profit Factor: N/A
+   Total PnL: $5.94
+   Max Drawdown: 0.00%
+
+📈 Testing ZEC/USD...
+✅ Regime Detector initialized
+   ADX Period: 14
+   Ranging: ADX < 20
+   Trending: ADX 20-25
+   Strong Trend: ADX > 25
+✅ Enhanced Risk Manager initialized
+   Max Risk per Trade: 2.00%
+   Kelly Criterion: ENABLED
+   Volatility Adjustment: ENABLED
+   Multi-Target Exits: ENABLED
+✅ Upgraded Momentum Strategy initialized
+   Primary: 5m | Higher: 15m
+   Crypto MACD: (5,35,5)
+   Crypto RSI: 9
+   ADX Filter: 30-60
+✅ Upgraded Mean Reversion Strategy initialized (15m)
+   Half-Life Range: 5-200 bars
+   Z-Score Threshold: 2
+   ADX Filter: < 25 (ranging only)
+✅ Upgraded Volatility Breakout Strategy initialized (30m)
+   TTM Squeeze: 5-50 bars
+   Dynamic ATR stops: 2x normal, 3x high vol
+   Fetching 26120 candles...
