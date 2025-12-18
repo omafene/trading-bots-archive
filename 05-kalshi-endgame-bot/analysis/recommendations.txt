@@ -1,0 +1,13 @@
+OPTIMIZATION RECOMMENDATIONS
+================================================================================
+
+1. Side Distribution
+   90% YES trades - heavily skewed
+   Recommendation: Verify NO side trading is working properly
+   Config: Check position_manager.py no_price handling
+
+2. Position Sizing
+   Average position $14.03 - very small
+   Recommendation: Increase position_size_pct or lower min_position_size
+   Config: capital.position_size_pct: 0.10 (from current value)
+
