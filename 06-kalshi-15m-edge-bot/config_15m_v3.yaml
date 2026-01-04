@@ -1,0 +1,202 @@
+# ============================================================================
+# V3 CONFIGURATION - Mean Reversion Model
+# Copy this to config_15m.yaml when ready to use
+# ============================================================================
+
+# API Configuration
+api:
+  base_url: "https://api.elections.kalshi.com/trade-api/v2"
+  demo_url: "https://demo-api.kalshi.co/trade-api/v2"
+  use_demo: false
+  timeout: 10
+
+# Capital Management
+capital:
+  total_capital: 1000
+
+# Bot Control
+bot:
+  paused: false
+
+# ============================================================================
+# STRATEGY - V3 MEAN REVERSION
+# ============================================================================
+strategy:
+  # === PROBABILITY MODEL ===
+  probability_model: "v3"  # v3 = mean reversion (fixes bugs), v1 = legacy, v2 = calibrated
+
+  use_advanced_edge_detection: false  # SIMPLIFIED - v3 doesn't need multi-factor
+
+  symbols: ["SOL", "XRP", "BTC", "ETH"]
+
+  # === EDGE & PROBABILITY THRESHOLDS ===
+  min_edge_percent: 0              # Allow 0% edge (let probability model decide)
+  min_expected_probability: 0.48   # LOWERED - v3 is more conservative in its estimates
+  max_expected_probability: 0.99
+  min_signal_strength: 30          # LOWERED - v3 handles low signals better
+
+  # === POSITION SIZING ===
+  max_position_percent: 0.10
+  max_concurrent_trades: 5
+
+  # === PRICE FILTERS ===
+  price_floor_enabled: true
+  min_entry_price: 0.35            # RAISED from 0.30 (avoids 13.9% WR trades)
+  max_entry_price: 0.85            # Allow expensive (they win 92-100%)
+  max_bid_ask_spread: 0.12
+  max_spread_filter_enabled: true
+
+  # === LIQUIDITY ===
+  liquidity_gate_enabled: true
+  min_order_book_depth: 200
+  require_active_ticker: false
+
+  # === TIME WINDOW ===
+  min_minutes_to_close: 3          # LOWERED - capture 3-8 min window
+  max_minutes_to_close: 8          # LOWERED - tighter window
+
+  # === CONTRARIAN BETTING ===
+  disable_contrarian_bets: false   # ALLOW - they win 67.9%!
+  fade_contrarian_bets: false      # Don't fade - v3 handles naturally
+  contrarian_only_mode: false
+  min_fade_edge: -200.0
+
+  # === TREND FILTERS ===
+  trend_filter_enabled: false      # DISABLED - v3 handles internally
+  allowed_trends: ["up", "down"]   # Ignored when filter disabled
+
+  # Per-symbol settings (optional overrides)
+  symbol_configs:
+    SOL:
+      allowed_trends: ["up", "down"]
+    BTC:
+      allowed_trends: ["up", "down"]
+    ETH:
+      allowed_trends: ["up", "down"]
+    XRP:
+      allowed_trends: ["up", "down"]
+
+  # === R² & MOMENTUM FILTERS ===
+  r_squared_filter_enabled: true
+  min_r_squared: 0.30              # LOWERED - v3 less sensitive to noise
+  r_squared_lookback_minutes: null
+  use_ohlc_for_r_squared: false
+  ohlc_interval_seconds: 60
+
+  min_momentum_pct: 0.08           # LOWERED - allow weaker trends
+  min_trend_strength: 0.0          # DISABLED
+
+  # Minimum distance from spot price to threshold (all models)
+  min_distance_pct: 0.5            # Skip if price is within 0.5% of threshold
+
+  # === ORDER BOOK IMBALANCE FILTER ===
+  order_book_filter_enabled: true  # NEW: Real-time CEX order book veto
+  order_book_min_imbalance: 0.40   # Veto if imbalance between 0.40-0.60 (neutral)
+  order_book_max_imbalance: 0.60   # Only trade when clear directional pressure exists
+
+  # === EXECUTION ===
+  order_type: "limit"
+  slippage_buffer: 0.02            # $0.02
+  order_expiry_seconds: 10
+
+  # === LOCKS ===
+  ticker_lock_enabled: true
+  api_lag_protection_enabled: true
+  min_ticker_lock_seconds: 15
+  correlation_filter_enabled: true
+
+  # === STOP LOSS ===
+  stop_loss_enabled: true
+  stop_loss_pct: 0.05
+  trend_protection_enabled: false  # DISABLED for v3
+  max_trend_for_no: 0.70
+  min_trend_for_yes: -0.70
+
+  # === TAKE PROFIT ===
+  tp_enabled: true
+  target_roi: 1.5
+  tp_trail_percent: 0.08
+  tp_check_interval: 2
+
+# Order Book Feed (Real-time CEX data)
+order_book:
+  enabled: true                    # Enable WebSocket order book feed
+  smoothing_samples: 3             # Smooth imbalance over N samples (reduce noise)
+  order_book_depth: 3              # Use top N levels for calculations
+  max_data_age_ms: 1000            # Max age of order book data (ms)
+
+# Monitoring
+monitoring:
+  scan_interval: 3
+  spot_price_update_interval: 1
+  log_level: "INFO"
+  log_file: "logs/edge_bot.log"
+  log_skip_reasons: true
+  dashboard_enabled: true
+  dashboard_port: 8080
+
+# Risk Management
+risk:
+  max_per_category: 1.0
+  ticker_must_contain: []
+  blacklist_categories: []
+
+  # Kelly Criterion
+  use_config_balance_for_kelly: true
+  kelly_multiplier: 0.20           # LOWERED - more conservative
+  min_position_size: 20.0
+  max_position_size: 50.0
+
+  # Stop Loss
+  stop_loss_enabled: true
+  stop_loss_pct: 0.06
+
+  # Circuit Breaker
+  circuit_breaker_enabled: true
+  max_drawdown_pct: 0.25
+
+# Execution
+execution:
+  retry_attempts: 1
+  retry_delay: 2
+  sync_retry_attempts: 3
+  sync_retry_delay: 2
+
+# Calibration (v3 ignores most of this)
+calibration:
+  enabled: true
+  track_skipped_trades: true
+  check_outcomes_interval: 3600
+  data_retention_days: 30
+
+  # Dynamic recalibration - DISABLED for v3
+  dynamic_recalibration_enabled: false
+  recalibration_mode: "hybrid"
+  recalibration_interval_days: 7
+  drift_threshold_percent: 10.0
+  drift_check_interval_trades: 50
+  min_drift_samples: 50
+  drift_lookback_trades: 100
+  max_recalibration_interval_days: 1
+  min_recalibration_interval_hours: 6
+  recalibration_lookback_days: 1
+  min_samples_for_recalibration: 50
+  separate_curves_by_direction: true
+
+  # Crowd wisdom - DISABLED for v3
+  crowd_confidence:
+    enabled: false                 # Bot is more accurate than market
+    disabled_for_directions: []
+    high_depth_threshold: 500
+    low_depth_threshold: 100
+    max_market_weight: 0.0
+    min_market_weight: 0.0
+
+# Telegram
+telegram:
+  enabled: true
+  bot_token: "YOUR_TELEGRAM_BOT_TOKEN"
+  chat_id: "YOUR_TELEGRAM_CHAT_ID"
+  alert_on_edge_found: true
+  min_edge_for_alert: 5
+  min_signal_for_alert: 30

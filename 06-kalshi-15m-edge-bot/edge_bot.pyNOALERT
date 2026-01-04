@@ -1,0 +1,260 @@
+"""
+Kalshi 15-Minute Edge Detection Bot
+Finds mispriced BTC/ETH 15-minute markets and trades on significant edge
+"""
+
+import yaml
+import logging
+import time
+import sys
+from pathlib import Path
+from datetime import datetime, timezone
+from kalshi_client import KalshiClient
+from spot_price_feed import CFBenchmarksRTI
+from momentum_analyzer import MomentumAnalyzer
+from market_scanner_15m import Market15mScanner
+from edge_detector import EdgeDetector
+from position_manager_15m import PositionManager15m
+from risk_manager import RiskManager
+from telegram_notifier import TelegramNotifier
+
+def setup_logging(config: dict):
+    log_level = config['monitoring']['log_level']
+    log_file = config['monitoring']['log_file']
+    Path(log_file).parent.mkdir(exist_ok=True, parents=True)
+    logging.basicConfig(
+        level=getattr(logging, log_level),
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[logging.FileHandler(log_file), logging.StreamHandler(sys.stdout)]
+    )
+
+class EdgeDetectionBot:
+    def __init__(self, config_path: str = "config_15m.yaml"):
+        with open(config_path, 'r') as f:
+            self.config = yaml.safe_load(f)
+        
+        setup_logging(self.config)
+        self.logger = logging.getLogger(__name__)
+        
+        self.telegram = TelegramNotifier(self.config, bot_controller=self)
+        self.client = KalshiClient(self.config)
+        self.spot_feed = CFBenchmarksRTI(self.config)
+        self.momentum = MomentumAnalyzer(self.spot_feed)
+        self.scanner = Market15mScanner(self.client, self.config)
+        self.edge_detector = EdgeDetector(self.spot_feed, self.momentum, self.config)
+        self.risk_manager = RiskManager(self.config, self.telegram)
+        self.position_manager = PositionManager15m(self.client, self.config, self.telegram)
+        
+        self.running = False
+        self.paused = self.config.get('bot', {}).get('paused', False)
+    
+    def start(self):
+        if not self.client.authenticate():
+            self.logger.error("❌ Authentication failed")
+            return
+        if self.telegram.enabled:
+            self.telegram.start_command_listener()
+        
+        self.running = True
+        self.logger.info("="*60)
+        self.logger.info("🚀 15-MINUTE EDGE DETECTION BOT STARTED")
+        self.logger.info("="*60)
+        
+        self.run_loop()
+
+    def run_loop(self):
+        """Main loop with restored scanning logs and high-frequency Take Profit checks"""
+        scan_interval = self.config['monitoring'].get('scan_interval', 30)
+        spot_update_interval = self.config['monitoring'].get('spot_price_update_interval', 5)
+        last_scan_time, last_spot_update, iteration = 0, 0, 0
+        
+        while self.running:
+            now = time.time()
+            
+            # Reset ticker locks at the top of every hour
+            if int(now) % 3600 < 10: 
+                self.edge_detector.reset_locks()
+
+            try:
+                # --- 1. TAKE PROFIT CHECK (The Fix) ---
+                # This now runs every 5 seconds so you don't miss a peak
+                if not self.paused:
+                    self.position_manager.manage_take_profit()
+                
+                # --- 2. UPDATE SPOT PRICES & MOMENTUM ---
+                if now - last_spot_update >= spot_update_interval:
+                    self._update_spot_prices()
+                    last_spot_update = now
+                
+                # --- 3. MAIN SCAN CYCLE ---
+                if now - last_scan_time >= scan_interval:
+                    iteration += 1
+                    self.logger.info("\n" + "="*60)
+                    self.logger.info(f"🔍 SCAN CYCLE #{iteration}")
+                    self.logger.info("="*60)
+                    
+                    # 1. SCAN MARKETS
+                    markets = self.scanner.scan_opportunities()
+                    self.logger.info(f"📊 Found {len(markets)} active 15-min markets")
+                    
+                    # 2. DETECT EDGES
+                    opportunities = self.edge_detector.scan_for_edges(markets)
+
+                    if opportunities:
+                        self.logger.info(f"🎯 {len(opportunities)} markets with significant edge!")
+                        # EXECUTION
+                        if not self.paused: 
+                            self._process_opportunities(opportunities)
+                        else: 
+                            self.logger.info("⏸️ Bot is PAUSED - observation mode")
+                    else:
+                        self.logger.info("⏭️ No significant edges found in this cycle.")
+                    
+                    # Display real portfolio status & trigger Janitor
+                    self._show_portfolio_status()
+                    last_scan_time = now
+                
+                # Sleep is set to 5s to maintain high-frequency TP/Spot updates
+                time.sleep(5)
+                
+            except Exception as e:
+                self.logger.error(f"❌ Error in main loop: {e}")
+                time.sleep(30)
+
+    def _run_cycle(self):
+        """
+        Helper method synchronized with actual class method names.
+        Used for manual triggers or simplified testing.
+        """
+        # Ensure we use scan_opportunities to match your Scanner class
+        markets = self.scanner.scan_opportunities() 
+        opportunities = self.edge_detector.scan_for_edges(markets)
+        
+        if opportunities and not self.paused:
+            self._process_opportunities(opportunities)
+
+        # The Fix: Check profits
+        self.position_manager.manage_take_profit()
+
+        # Update logs
+        self._show_portfolio_status()
+
+    
+    def _update_spot_prices(self):
+        btc_price = self.spot_feed.get_btc_price()
+        eth_price = self.spot_feed.get_eth_price()
+        if btc_price: self.momentum.update_price_history('BTC')
+        if eth_price: self.momentum.update_price_history('ETH')
+
+    def _display_opportunity(self, opp: dict):
+        """Display opportunity and send Telegram alert if thresholds are met"""
+        # 1. Log to console
+        self.logger.info(f"\n🎯 {opp['ticker']} | {opp['recommended_side'].upper()} @ {opp['entry_price']:.0%} | Edge: {opp['edge_percent']:.1f}% | ROI: {opp['expected_roi']:.1f}%")
+        self.logger.info(f"   Signal Strength: {opp['signal_strength']:.1f}/100")
+        
+        # 2. Restoration of your Telegram Notification Logic
+        if self.telegram and self.telegram.enabled:
+            telegram_config = self.config.get('telegram', {})
+            # Read thresholds from config
+            min_edge = telegram_config.get('min_edge_for_alert', 10.0)
+            min_signal = telegram_config.get('min_signal_for_alert', 70)
+            
+            # Send alert if thresholds are met (even if bot is paused)
+            if opp['edge_percent'] >= min_edge and opp['signal_strength'] >= min_signal:
+                mom = opp['momentum']
+                alert_msg = (
+                    f"🎯 EDGE DETECTED\n"
+                    f"\n"
+                    f"📊 {opp['symbol']}: {opp['ticker']}\n"
+                    f"⏰ Closes in {opp['minutes_to_close']:.0f} min\n"
+                    f"\n"
+                    f"💎 EDGE: {opp['edge_percent']:.1f}%\n"
+                    f"Expected: {opp['expected_probability']:.0%} | Market: {opp['market_probability']:.0%}\n"
+                    f"\n"
+                    f"📈 {mom['direction'].upper()} {mom['percent_change']:+.2f}%\n"
+                    f"💪 Signal: {opp['signal_strength']:.0f}/100\n"
+                    f"\n"
+                    f"💰 {opp['recommended_side'].upper()} @ {opp['entry_price']:.0%}\n"
+                    f"ROI: {opp['expected_roi']:.0f}%\n"
+                )
+                
+                if self.paused:
+                    alert_msg += "\n\n⏸️  OBSERVATION MODE"
+                
+                self.telegram.send_message(alert_msg)
+                self.logger.info("📱 Telegram alert sent")
+ 
+    def _process_opportunities(self, opportunities: list):
+        balance = self.client.get_balance()
+        # Use existing positions to calculate slots
+        current_positions = self.position_manager.open_positions
+        
+        order_type = self.config['strategy'].get('order_type', 'market')
+        max_concurrent = self.config['strategy'].get('max_concurrent_trades', 4)
+        available_slots = max_concurrent - len(current_positions)
+
+        if available_slots <= 0:
+            self.logger.info(f"🛑 MAX CONCURRENT TRADES REACHED")
+            return
+
+        for opp in opportunities[:available_slots]:
+            max_pos_pct = self.config['strategy'].get('max_position_percent', 0.45)
+            trade_size = (balance * max_pos_pct) / max_concurrent
+
+            if trade_size < 0.4:
+                self.logger.info(f"⚠️ Insufficient balance for {opp['ticker']}")
+                continue
+
+            # CLEAN EXECUTION: Only call this once!
+            success = self.position_manager.open_position(opp, trade_size, order_type=order_type)
+            if success:
+                self.logger.info(f"✅ {opp['ticker']} trade processed successfully")
+            else:
+                self.logger.info(f"❌ Execution failed for {opp['ticker']}")
+
+
+    def _show_portfolio_status(self):
+        """Fixed version"""
+        balance = self.client.get_balance()
+        self.position_manager.sync_with_exchange()
+        
+        all_raw_positions = self.client.get_positions()
+        
+        if not all_raw_positions:
+            self.logger.info(f"\n💼 PORTFOLIO STATUS:")
+            self.logger.info(f"   Cash: ${balance:,.2f}")
+            self.logger.info(f"   Bot-Managed: {len(self.position_manager.open_positions)}")
+            self.logger.info(f"   Total Exposure: $0.00 (no positions)")
+            return
+        
+        total_deployed = 0
+        
+        for pos in all_raw_positions:
+            # Method 1: Try cost field
+            cost = pos.get('position_cost', 0) or pos.get('cost', 0)
+            
+            if cost > 0:
+                # Assuming cents
+                total_deployed += cost / 100
+            else:
+                # Method 2: Calculate from quantity × price
+                quantity = abs(pos.get('position', 0))  # Can be negative
+                avg_price = pos.get('purchase_price', 0) or pos.get('yes_price', 0) or pos.get('no_price', 0)
+                
+                if quantity > 0 and avg_price > 0:
+                    # Price likely in cents (0-100)
+                    total_deployed += (quantity * avg_price) / 100
+        
+        self.logger.info(f"\n💼 PORTFOLIO STATUS:")
+        self.logger.info(f"   Cash: ${balance:,.2f}")
+        self.logger.info(f"   Bot-Managed: {len(self.position_manager.open_positions)}")
+        self.logger.info(f"   Total Positions: {len(all_raw_positions)}")
+        self.logger.info(f"   Total Exposure: ${total_deployed:,.2f}")
+
+
+    def stop(self): self.running = False
+
+if __name__ == "__main__":
+    EdgeDetectionBot().start()
+
+

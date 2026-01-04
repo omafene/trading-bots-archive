@@ -1,0 +1,456 @@
+
+# API Configuration
+# SECURITY: Set KALSHI_API_KEY_ID and KALSHI_PRIVATE_KEY_PATH as environment variables
+# See .env.example for instructions
+api:
+  base_url: "https://api.elections.kalshi.com/trade-api/v2"
+  demo_url: "https://demo-api.kalshi.co/trade-api/v2"
+  use_demo: false
+  timeout: 10
+  # These will be overridden by environment variables (recommended)
+  # Only use these as fallback if env vars are not set
+  api_key_id: "YOUR_API_KEY_ID"  # Override with KALSHI_API_KEY_ID env var
+  private_key_path: "production_private_key.pem"  # Override with KALSHI_PRIVATE_KEY_PATH env var
+
+# Kalshi Private WebSocket Feed (real-time fills/orders — eliminates REST lag)
+binance_price_feed:
+  enabled: true             # Binance aggTrade WS → price_history for spike detection
+  min_write_interval: 0.25  # Throttle: 4 writes/s per symbol — matches buffer sizing (1200 samples ≈ 5 min)
+
+kalshi_ws:
+  enabled: true             # false = zero behavior change, pure REST fallback
+  reconnect_delay: 1        # Initial reconnect wait (seconds)
+  max_reconnect_delay: 60   # Exponential backoff cap (seconds)
+  positions_sync_interval: 1   # Seconds between get_positions() REST calls when WS active, was 2
+
+# Capital Management
+capital:
+  total_capital: 250  # Start with separate $500 for testing
+
+# Bot Control
+bot:
+  paused: false  # Set to true for observation mode, false to trade
+
+
+# Strategy Settings
+strategy:
+  # === ADVANCED EDGE DETECTION ===
+  use_advanced_edge_detection: true  # Enable multi-factor edge model (RECOMMENDED)
+
+  # === PROBABILITY MODEL SELECTION ===
+  probability_model: "v4"  # Options: "v1", "v3" (mean reversion), "v4" (improved)
+  # v1 (legacy): Original model - overconfident, calculates >1.0 probabilities
+  #              Pro: Aggressive, takes more trades
+  #              Con: 30-36% overconfident, needs crowd blending to correct
+  # v3 (mean reversion): Distance-based step function, flat mean reversion penalty
+  #              Pro: Simple, interpretable, stable
+  #              Con: Same raw % thresholds for all assets; regime-blind penalty
+  # v4 (improved): All v3 improvements plus:
+  #   - HTF buffer extended so 1h/4h tide filter actually has enough data
+  #   - Sub-15m MTF timeframes use rolling windows (not partial candle data)
+  #   - Distance normalised by residual volatility (σ-based thresholds)
+  #   - Mean reversion penalty scales with R² (regime-aware)
+
+  # v4 knobs (only used when probability_model: "v4", all optional)
+  v4:
+    htf_buffer_extra_minutes: 20   # extra minutes of history beyond the HTF window
+    rolling_mtf_threshold: 15      # timeframes < this use rolling (not candle-aligned)
+    vol_floor: 0.15                # minimum residual volatility σ (% of price)
+    reversion_trend_scale: 0.6     # R²=1 reduces penalty by this fraction (0–1)
+
+  symbols: ["ETH", "SOL", "XRP"]  # BTC removed: 47.4% WR on 5m data
+  # Edge detection thresholds
+  min_edge_percent: 5            # Require meaningful mispricing before entry
+  max_edge_percent: 25           # >=25% edge = model overconfidence (42-49% WR on 5m data)
+  min_expected_probability: 0.85  # 70-80% bucket was coin flip; only >=85% reliably wins
+  max_expected_probability: 0.99   # Max probability (prevent overconfidence)
+  min_signal_strength: 65         # <65 had 51.5% WR on 5m data; 65-75 had 58.5%
+  max_position_percent: 0.20       # Max 80% of capital per trade
+  liquidity_gate_enabled: true  # TOGGLE: Set to false to ignore depth
+  # --- NEW SAFETY SETTINGS ---
+  price_floor_enabled: true      # TOGGLE: Set to false to disable
+  min_entry_price: 0.45            # <0.45 had 39-41% WR on 5m data — raise floor
+  max_entry_price: 0.55            # Maximum 55¢
+  max_bid_ask_spread: 0.25         # Max bid-ask spread filter
+  max_spread_filter_enabled: true  # TOGGLE: Set to false to disable
+
+  # --- KALSHI INTERNAL PRICE DIRECTION FILTER ---
+  # Tracks YES ask price across scans (sampled every 10s). Blocks trades where Kalshi
+  # market participants are pricing against your CEX momentum signal.
+  kalshi_price_direction_filter_enabled: "observe"  # observe = log only (no blocking); true = enforce (block trades); false = off
+  kalshi_price_lookback_seconds: 30             # Compare YES price now vs 30s ago
+  kalshi_price_min_change: 0.005                # Minimum 0.5¢ move to count as opposing direction
+  ticker_lock_enabled: true         # Prevent re-trading the same strike strike
+  correlation_filter_enabled: false  # Disabled: 1s scan makes this redundant (max_concurrent_trades is the cap)
+
+  # --- TIME-BASED LOCK PROTECTION (API Lag Protection) ---
+  api_lag_protection_enabled: true  # Enable time-based lock protection (HIGHLY RECOMMENDED)
+  # Prevents duplicate trades due to Kalshi API lag in position reporting
+  min_ticker_lock_seconds: 60      # Keep ticker locked for minimum duration after trade attempt!
+  # Recommended: 30-90 seconds depending on your scan_interval
+
+  # --- INVERTED MODE ---
+  inverted_mode: false              # When true: flips every trade YES↔NO (bet opposite side)
+
+  # --- CONTRARIAN BETTING FILTER ---
+  disable_contrarian_bets: true     # TOGGLE: Prevent betting against momentum direction
+
+  # --- FADE CONTRARIAN BETS (EXPERIMENTAL) ---
+  fade_contrarian_bets: false       # Disabled
+  min_fade_edge: -100.0              # Minimum edge for faded trades (independent of min_edge_percent)
+  contrarian_only_mode: false      # TOGGLE: When TRUE, ONLY trade faded contrarian bets (skip all non-contrarian trades)
+  # Note: faded edge gate uses min_edge_percent (same requirement as all other trades)
+  use_original_edge_for_signal: true  # TOGGLE: Use original edge (not faded) for signal strength calc
+  #   true  → Signal score uses pre-flip edge (positive) → higher signal strength → more trades pass
+  #   false → Signal score uses faded edge (negative) → lower signal strength → reverts to old behaviour
+  use_original_prob_for_fade: true   # TOGGLE: Use original (contrarian) side's probability for the prob gate
+  min_fade_expected_probability: 0.70  # Separate prob gate for fades (set lower than min_expected_probability to allow more fades through)
+  #   false → Prob gate uses flipped side's probability → better quality filter (~81% WR at 0.60 gate)
+  #   true  → Prob gate uses pre-flip probability → bypasses flipped side's low prob (~68% WR at 0.60 gate)
+
+  # HOW IT WORKS:
+  #   - Only applies when disable_contrarian_bets is true
+  #   - When bot detects contrarian bet:
+  #       fade_contrarian_bets: true  → Bet the OPPOSITE side (momentum-aligned)
+  #       fade_contrarian_bets: false → Skip trade entirely (current behavior)
+  #   - If disable_contrarian_bets is false, this setting has NO EFFECT
+  #     (contrarian bets are allowed normally)
+ 
+  # --- TREND FILTER ---
+  trend_filter_enabled: false          # NO-only mode: YES had 44.7% WR, NO had 59.4% on 5m data
+  allowed_trends: ["down", "up"]           # NO-only: only trade downward momentum
+
+  # --- PER-SYMBOL DIRECTION FILTERS ---
+  # Override allowed_trends per symbol (optional - uses global allowed_trends if not specified)
+  # Based on analysis: SOL profitable both ways (84.6% UP, 97% DOWN), BTC/ETH DOWN only??
+  # Per-symbol overrides stripped — global ["down"] (NO-only) applies to all
+  symbol_configs:
+    SOL:
+      allowed_trends: ["down"]
+    ETH:
+      allowed_trends: ["down"]
+    XRP:
+      allowed_trends: ["down"]
+
+  # --- VOL RATIO FILTER ---
+  # Blocks trades when realized volatility exceeds implied by too large a margin.
+  # vol_ratio = realized_vol / implied_vol (from Kalshi binary price structure)
+  # Kalshi data (Feb-Mar, 52K rows): WR peaks at 51.9% in 1.0–1.1x band;
+  #   above 1.2x WR collapses to 17-20% (too chaotic); below 0.9x WR drops to 15-25% (asset underperforming implied)
+  max_vol_ratio: null             # Disabled
+  min_vol_ratio: null             # Disabled
+
+  # --- R² CONFIDENCE FILTER (Linear Regression Quality) ---
+  r_squared_filter_enabled: true     # Master switch — must be true for any R² filtering to apply
+  min_r_squared: 0.65                # R²<0.6 had 47% WR; 0.6-0.7 had 67% WR on 5m data
+  # HTF-aware mode (regime adaptive — recommended)
+  # true  → _up/_down flags below are IGNORED. Gate is relaxed for HTF-aligned trades, applied for everything else.
+  # false → _up/_down flags below take effect (legacy mode).
+  # Logic: if trade direction == 1h HTF direction → relax R² gate (sharp HTF-aligned moves are non-linear → low R² but win 63%+)
+  # In bear market: HTF=down, trade=down → aligned → gate relaxed
+  # In bull market: HTF=up,  trade=up   → aligned → gate relaxed (auto-adapts to regime)
+  r_squared_htf_aware: false
+  # Legacy per-direction overrides — only active when r_squared_htf_aware: false
+  # (ignored when r_squared_htf_aware: true)
+  # Data: UP Low-R² → 29% WR, DOWN Low-R² → 63.2% WR
+  r_squared_filter_enabled_up: true    # UP: keep filter on
+  r_squared_filter_enabled_down: true # DOWN: disable filter
+
+  # Rolling Window for R² (for late-window trading)
+  r_squared_lookback_minutes: 2.0       # Use last 2 minutes for R² calculation
+  # For trading in last 5-6 mins: Use 4-5 minutes lookback
+  # For trading in last 2-3 mins: Use 3-4 minutes lookback
+  # Set to null to use full candle (traditional approach)
+
+  # OHLC Aggregation for R² (reduces 1-second tick noise)
+  use_ohlc_for_r_squared: false      # DISABLED: Wait and monitor current approach first
+  ohlc_interval_seconds: 30          # Candle interval (60 = 1-minute candles)
+  # R² calculated on 1-minute OHLC close prices instead of raw ticks
+  # Execution still uses 1-second updates for speed
+  # Why: You experienced erratic R² correlation before - this should fix it
+
+  # Momentum Filter (works with R² - filters flat trends)
+  min_momentum_pct: 0.1         # Minimum slope/momentum (% change per period)
+  min_momentum_consecutive: 2      # Require N consecutive scans above threshold before firing
+                                   # 1 = disabled (old behaviour). 3 = 3s at scan_interval=1s.
+  min_momentum_slope: null         # Disabled: 53% WR on blocked trades (marginal, not worth the volume loss)
+                                   # -0.05 = allow up to 0.05% decel; 0.0 = require flat or accelerating
+  # ADJUSTED: Lowered from 0.50 to 0.30 to allow more trades
+  # Original calibration showed: 0.2-0.5% momentum = 33.2% win rate
+  #                              >0.5% momentum = 41.2% win rate
+  # New threshold (0.30) balances trade volume with quality
+  # IMPORTANT: Must use BOTH R² and momentum filters together!
+  # - R² alone: Can pass stable sideways markets (high R², flat slope)
+  # - Momentum alone: Can pass noisy choppy markets (low R², strong short-term moves)
+  # - Combined: Requires BOTH trend quality (R²) AND direction (slope)
+
+  # Minimum distance from spot price to threshold (all models)
+  # Skips trades where price is within this % of the threshold — too close to call.
+  min_distance_pct: 0.0            # e.g., 0.5 = skip if within 0.5% of threshold, null if not needed
+
+  # === EARLY ENTRY SPIKE FILTER ===
+  # When enabled: requires a sharp CEX price spike to fire trades early in the candle.
+  # Applies only when minutes_to_close > early_entry_max_minutes_to_close (i.e. candle just opened).
+  # When disabled: bot uses existing momentum/R² filters for all candle positions (current behaviour).
+  early_entry_spike_filter_enabled: false
+  early_entry_min_spike_pct: 0.299      # CEX must have moved >= 0.299% within the window
+  early_entry_window_seconds: 3        # Rolling window to measure the spike (seconds)
+  spike_min_cluster_count: 1           # Min spike events in same direction within cluster window (1 = disabled)
+  spike_cluster_window_secs: 15        # Lookback window for counting cluster spikes (seconds)
+  early_entry_max_minutes_to_close: 2  # Only enforce spike requirement above this threshold
+                                       # (>8 min to close = early entry; <=8 = late/no spike needed)
+  early_entry_min_minutes_to_close: 10  # Upper cap: spike filter only applies when minutes_to_close <= this value
+                                       # null (~) = no upper cap (applies all the way to candle open)
+                                       # e.g. 13 = only require spike when 8 < minutes_to_close <= 13
+  # Spike direction mode:
+  #   true  = spike in either direction passes; spike direction sets the trade side (bypasses trend filter)
+  #   false = spike must match existing momentum direction (original behaviour)
+  spike_determines_direction: true
+  # To restore previous behaviour entirely: set early_entry_spike_filter_enabled: false
+
+  # NEW: Trend Strength Filter (combines R² quality + momentum direction)
+  min_trend_strength: 0.00           # Disabled — R² and trend% gated separately via min_r_squared + min_momentum_pct
+  # ADJUSTED: Lowered from 0.30 to 0.20 to allow more trades
+  # Original calibration showed: <0.3 trend strength = 36-37% win rate
+  #                              >0.3 trend strength = 43% win rate
+  # New threshold (0.20) allows more opportunities while still filtering noise
+
+  # R² measures how well prices follow a trend line:
+  #   0.7+ = Strong, clean trend (high confidence)
+  #   0.4-0.7 = Medium trend quality
+  #   <0.3 = Noisy, choppy price action (skip these)
+  # Recommended: 0.30 for rolling window, 0.25 for full candle
+
+  # NEW: Hard cap on total open positions
+  max_concurrent_trades: 4
+  order_type: "market"        # Force immediate fills (market) or limit orders
+  slippage_buffer: 0.01       # Assume you'll pay 2 cents more than quoted, was 5
+
+# --- NEW: ORDER EXPIRY ---
+  order_expiry_seconds: 5         # Cancel order quickly if conditions change (fast-moving markets)
+
+  # --- New Liquidity Gates ---
+  require_active_ticker: false     # Set to true if you only want to trade "warm" markets
+  min_order_book_depth: 150         # Minimum contracts available at the Ask price
+
+  # Market filters
+  min_minutes_to_close: 2.5         # Skip if <2.5 min left (Averaging window risk)
+  max_minutes_to_close: 4           # 4-5m had 44% WR on 5m; same principle — enter in back half only
+
+  # === ORDER BOOK IMBALANCE FILTER (V3 Enhancement) ===
+  order_book_filter_enabled: false       # DISABLED: dead zone 0.499-0.501 was filtering nothing
+  order_book_min_imbalance: 0.499         # Veto if imbalance between these values (neutral zone)
+  order_book_max_imbalance: 0.501        # OBI > 0.51 = bullish, < 0.49 = bearish
+  order_book_direction_alignment: false  # Veto if OBI direction conflicts with trade side
+  # OBI Trend Filter — checks if imbalance is moving toward or against the trade
+  # off:       snapshot only (no trend check)
+  # defensive: block if trend actively opposes trade direction, neutral passes  ← recommended
+  # strict:    require trend to confirm trade direction, neutral also blocked
+  order_book_trend_mode: "off"
+  order_book_trend_window: 30            # Seconds of history (~22 readings at 2s cycle)
+  order_book_trend_threshold: 0.03       # OBI shift required to classify as rising/falling
+  # Imbalance = Bid_Vol / (Bid_Vol + Ask_Vol)
+  # > 0.51 = Bullish pressure, < 0.49 = Bearish pressure, 0.49-0.51 = Neutral (skip)
+
+  # === V3 ELITE FILTERS (Volume Divergence + Multi-Timeframe) ===
+
+  # --- VOLUME DIVERGENCE FILTER ---
+  # Detects fake breakouts: price makes new 5-min high/low but momentum (per-30s price change)
+  # is declining vs the sample that set the historical high/low.
+  # NOTE: Uses price-change magnitude as activity proxy — real exchange volume is 24h rolling
+  # and changes <0.1% between 30s samples, making a volume threshold unreachable.
+  volume_divergence_filter_enabled: false  # Toggle to enable volume divergence detection
+  volume_lookback_samples: 10              # Track last 10 samples (~5 min at 30s intervals)
+  volume_divergence_threshold: 0.20        # 20% = momentum must drop 20%+ vs historical peak to flag divergence
+  min_price_move_for_divergence: 0.002     # 0.2% = min new-high/low required to check divergence (was 0.005)
+  volume_sample_interval: 30               # Sample price/activity every 30 seconds
+  # How it works:
+  #   Bearish Divergence: Price makes new 5-min high BUT momentum decelerating 20%+ → VETO YES (fake breakout)
+  #   Bullish Divergence: Price makes new 5-min low BUT momentum decelerating 20%+ → VETO NO (selling exhaustion)
+
+  # --- MTF: HIGHER TIMEFRAME TIDE FILTER ---
+  mtf_htf_filter_enabled: false            # Toggle to enable 1h/4h trend alignment
+  htf_timeframe: "1h"                      # Options: "1h" or "4h"
+  htf_min_trend_threshold: 0.01            # 1% = strong trend (require 1% move in HTF to enforce alignment)
+  htf_trend_indicator: "momentum"          # Options: "momentum" or "ema200"
+  # How it works:
+  #   If 1h trend is bullish (+1%+), block all NO trades (don't fight the tide)
+  #   If 1h trend is bearish (-1%+), block all YES trades (don't catch falling knives)
+  #   Prevents catastrophic losses from trading against macro trends ("God Candles")
+
+  # --- MTF: SHORT-TERM ALIGNMENT FILTER ---
+  mtf_short_term_filter_enabled: false   # Disabled: was blocking too many trades on Kalshi
+  short_term_timeframes: ["5m", "1m"]           # Timeframes to check for alignment ( "1m", "5m", "15m")
+  min_aligned_timeframes: 1              # Require 1 out of N timeframes to agree
+  # Per-direction overrides — UP: keep (blocks exhausted pumps), DOWN: disable (5m lags the drop)
+  mtf_short_term_filter_enabled_up: true
+  mtf_short_term_filter_enabled_down: true
+  # Early-candle bypass: skip MTF check when spike filter already confirmed the move.
+  # Applies when minutes_to_close > early_entry_max_minutes_to_close (same threshold as spike filter).
+  # false = MTF always enforced (old behaviour). true = MTF skipped in early window.
+  mtf_early_entry_bypass: true
+
+  # Early-candle bypass: skip HTF veto when spike filter already confirmed the move.
+  # Applies when minutes_to_close > early_entry_max_minutes_to_close (same threshold as spike filter).
+  # false = HTF always enforced (old behaviour). true = HTF veto skipped in early window.
+  htf_early_entry_bypass: true
+  # How it works:
+  #   Calculate momentum for 1m, 5m, and 15m windows
+  #   If betting YES, require at least 2/3 to show bullish momentum
+  #   If betting NO, require at least 2/3 to show bearish momentum
+  #   Catches "late signals" where 15m looks good but 1m/5m are already reversing
+
+
+  # Ticker filters (BTC/ETH only)
+  ticker_must_contain: []
+  # --- NEW STOP-LOSS SETTINGS ---
+  stop_loss_enabled: false          # Set to false to disable auto-alerts/exits
+  stop_loss_pct: 0.5              # Alert if spot moves 5% against your strike
+   
+  trend_protection_enabled: false   # STRIPPED: NO-only mode handles direction
+  max_trend_for_no: 0.7           # Recommended starting point
+  min_trend_for_yes: -0.7          # Recommended starting point
+
+  # --- Take Profit Settings ---
+  tp_enabled: false                # Toggle: true = active, false = off
+  target_roi: 0.5                 # 2.0 = 200% Profit (e.g., buy at 20¢, sell at 60¢)
+  tp_trail_percent: 0.10           # Exit if the price drops 5% from the peak
+  tp_check_interval: 1           # Check every 15 seconds
+
+
+# Monitoring
+monitoring:
+  scan_interval: 0.3                   # Scan every 300ms (event-driven; WS wakes loop faster)
+  spot_price_update_interval: 1         # Update spot prices every 1 sec (faster response for sniper bot)
+  market_cache_ttl: 10                  # Seconds to cache the 15m market list (avoids 4 REST calls/scan)
+  log_level: "INFO"                     # or DEBUG for monitoring
+  log_file: "logs/edge_bot.log"
+  log_skip_reasons: true
+
+  # Performance Dashboard
+  dashboard_enabled: true               # Enable web dashboard
+  dashboard_port: 8080                  # Dashboard port (access at http://localhost:8080)
+
+# Order Book Feed (Real-time CEX Data - V3 Enhancement)
+order_book:
+  enabled: true                    # Enable WebSocket order book feed from Binance
+  smoothing_samples: 3             # Smooth imbalance over N samples (reduce noise)
+  order_book_depth: 3              # Use top N levels for micro-price calculations
+  max_data_age_ms: 1000            # Max age of order book data (ms) before considering stale
+
+  # Coinbase Authentication (for Level 2 order book access)
+  # SECURITY: Set as environment variables (recommended)
+  coinbase_api_key: ""             # Override with COINBASE_API_KEY env var
+  coinbase_api_secret: ""          # Override with COINBASE_API_SECRET env var
+
+# Risk Management
+risk:
+  max_per_category: 1.0                 # 100% in crypto (this is crypto-only bot)
+  ticker_must_contain: []   # BTC/ETH only
+  blacklist_categories: []
+
+  # --- KELLY CRITERION POSITION SIZING ---
+  use_config_balance_for_kelly: true   # true = Use config total_capital, false = Use live API balance
+  kelly_multiplier: 0.25               # Quarter-Kelly (conservative, reduces variance)
+  kelly_mode: "standard"               # "standard" = normal Kelly, "reverse" = bet more on lower-confidence/higher-payout trades
+  # Options: 0.25 (Quarter-Kelly, recommended), 0.50 (Half-Kelly), 1.0 (Full Kelly, risky)
+  min_position_size: 0.5               # Minimum dollars per trade (hard floor)
+  max_position_size: 25.0               # Maximum dollars per trade (hard cap, overrides Kelly)
+
+  # --- REAL STOP-LOSS (Auto-Exit) ---
+  stop_loss_enabled: off          # Enable automatic position exits on adverse moves
+  max_loss_roi: 0.50               # Exit if position loses 30% of entry value (ROI-based)
+
+
+  # --- CIRCUIT BREAKER (Max Drawdown Protection) ---
+  circuit_breaker_enabled: false    # Enable automatic trading halt on excessive losses
+  max_drawdown_pct: 0.25           # Halt trading if balance drops 15% from peak
+  # How it works:
+  #   - Tracks your peak balance (highest point reached)
+  #   - If balance drops 15% below peak → Automatically pauses trading
+  #   - Sends Telegram alert for manual review
+  #   - Prevents catastrophic losses from strategy failure
+  # Example: Peak=$500 → Halt at $425 (15% down)
+
+
+# Execution
+execution:
+  retry_attempts: 2
+  retry_delay: 2
+
+  # NEW: Sync retry settings
+  sync_retry_attempts: 3     # Retry sync on failure
+  sync_retry_delay: 2        # Initial delay before retry (exponential backoff)
+# Calibration & Model Improvement
+calibration:
+  enabled: true                    # Enable negative edge tracking
+  track_skipped_trades: true       # Log all skipped opportunities
+  check_outcomes_interval: 3600    # Check outcomes every hour (seconds)
+  data_retention_days: 30          # Keep tracking data for 30 days
+
+  # === DYNAMIC CALIBRATION (v2 model only) ===
+  dynamic_recalibration_enabled: false  # Auto-update calibration curves from performance data
+
+  # === RECALIBRATION MODE ===
+  recalibration_mode: "hybrid"  # Options: "schedule", "drift", "hybrid"
+  # - "schedule": Fixed interval (every N days)
+  # - "drift": Trigger when performance deviates >X% from calibration
+  # - "hybrid": Trigger on EITHER drift OR schedule (RECOMMENDED for crypto)
+
+  # SCHEDULE-BASED RECALIBRATION
+  recalibration_interval_days: 1.0  # Recalibrate every N days (schedule mode)
+
+  # DRIFT-BASED RECALIBRATION (detects market regime changes)
+  drift_threshold_percent: 10.0  # Recalibrate if performance drifts >10%
+  drift_check_interval_trades: 50  # Check drift every 50 new trades
+  min_drift_samples: 50  # Need 50+ samples to calculate reliable drift
+  drift_lookback_trades: 100  # Use last 100 trades for drift calculation
+
+  # HYBRID MODE LIMITS (prevent over/under-fitting)
+  max_recalibration_interval_days: 1  # Force recal after 7 days (prevent staleness)
+  min_recalibration_interval_hours: 6  # Don't recal more than every 12h (prevent noise)
+
+  # DATA REQUIREMENTS
+  recalibration_lookback_days: 1  # Use last N days of data for recalibration
+  min_samples_for_recalibration: 50  # Minimum trades needed before updating
+  separate_curves_by_direction: true  # Use separate curves for UP vs DOWN trends
+
+  # Note: Only affects v2_calibrated model. v1 model always uses static probabilities.
+  # Hybrid mode triggers recalibration when EITHER:
+  #   1. Performance drift > 10% from calibration curve (adaptive)
+  #   2. 7 days have passed since last recalibration (max staleness)
+  # But respects cooldown (min 12h between recalibrations)
+
+  # Crowd wisdom settings (ENABLED - calibration proven!)
+  crowd_confidence:
+    enabled: false                   # Enable crowd wisdom weighting
+    disabled_for_directions: [] # DISABLE blending for UP trends (bot is better than crowd)
+    # Reason: Market prices UP trends wrong (crowd pulls bot's 80% down to 53%)
+    # DOWN trends benefit from crowd (91% WR), UP trends hurt by crowd (53% WR)
+    # With this setting: DOWN ~85-90% WR, UP ~70-80% WR
+
+    high_depth_threshold: 500       # High liquidity threshold
+    low_depth_threshold: 500        # Low liquidity threshold
+    max_market_weight: 0.8          # Max 80% trust market in high depth
+    min_market_weight: 0.8          # Min 60% trust market in low depth
+    # Calibration Results (for DOWN trends):
+    # - High depth markets: Market 83.8% accurate vs Bot 39.1% (HUGE advantage!)
+    # - Med depth markets: Market 70.9% accurate vs Bot 34.9%
+    # - Low depth markets: Market 68.7% accurate vs Bot 39.2%
+    # Strategy: Blend market prices with bot model based on liquidity (DOWN trends only)
+    #   High liquidity → Trust market 80%, bot 20%
+    #   Low liquidity → Trust market 60%, bot 40%
+
+# Telegram - SEPARATE bot for 15m edge bot
+# SECURITY: Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID as environment variables
+telegram:
+  enabled: true  # Set to true when you create separate bot
+  bot_token: "YOUR_TELEGRAM_BOT_TOKEN"  # Override with TELEGRAM_BOT_TOKEN env var
+  chat_id: "YOUR_TELEGRAM_CHAT_ID"      # Override with TELEGRAM_CHAT_ID env var
+
+# Alert settings - CONFIGURABLE ALERTS
+  alert_on_edge_found: true       # Send alert when edge is detected
+  min_edge_for_alert: -100      # Alert on all trades including fades (negative edge)
+  min_signal_for_alert: 10         # OR if signal strength >= 65
+  
+

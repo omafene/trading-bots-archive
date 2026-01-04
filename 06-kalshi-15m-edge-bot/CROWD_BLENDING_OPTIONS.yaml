@@ -1,0 +1,142 @@
+# ============================================================================
+# CROWD BLENDING CONFIGURATION OPTIONS
+# ============================================================================
+#
+# Choose ONE of the options below based on your strategy
+# Copy the chosen config to your config_15m.yaml
+#
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# OPTION 1: DISABLE CROWD BLENDING FOR UP TRENDS ONLY (RECOMMENDED)
+# ----------------------------------------------------------------------------
+# Use this if:
+# - You want to keep the 91% win rate on DOWN trends (crowd helps)
+# - You want to improve UP trend performance (let bot be more aggressive)
+# - Market conditions can change (sometimes up, sometimes down)
+#
+# Expected Performance:
+# - DOWN trends: 85-90% WR (slight decrease from 91%, still excellent)
+# - UP trends: 70-80% WR (BIG improvement from 53%)
+# - Overall: More balanced, works in both bull and bear markets
+
+calibration:
+  enabled: true
+  track_skipped_trades: true
+  check_outcomes_interval: 3600
+  data_retention_days: 30
+
+  crowd_confidence:
+    enabled: true
+    disabled_for_directions: ["up"]  # NEW: Disable blending for UP trends only
+
+    # Crowd blending settings (only apply to DOWN trends with this config)
+    high_depth_threshold: 500
+    low_depth_threshold: 100
+    max_market_weight: 0.8    # Trust market 80% on DOWN trends
+    min_market_weight: 0.6    # Trust market 60% minimum
+
+# ----------------------------------------------------------------------------
+# OPTION 2: DISABLE CROWD BLENDING FOR DOWN TRENDS ONLY
+# ----------------------------------------------------------------------------
+# Use this if:
+# - You think DOWN trend performance is too dependent on crowd
+# - You want bot to be more independent on DOWN trends
+# - You trust bot's calculations more than market for DOWN trends
+#
+# Expected Performance:
+# - DOWN trends: 80-85% WR (decrease from 91%)
+# - UP trends: 53% WR (no change, still poor with blending)
+# - Not recommended unless you have specific reason
+
+# calibration:
+#   crowd_confidence:
+#     enabled: true
+#     disabled_for_directions: ["down"]  # Disable for DOWN trends
+
+# ----------------------------------------------------------------------------
+# OPTION 3: DISABLE CROWD BLENDING COMPLETELY
+# ----------------------------------------------------------------------------
+# Use this if:
+# - You want bot to be fully independent
+# - You don't trust market pricing at all
+# - You want maximum consistency across all market conditions
+#
+# Expected Performance:
+# - DOWN trends: 80-85% WR (decrease from 91%)
+# - UP trends: 70-80% WR (BIG improvement from 53%)
+# - More symmetric performance, fully model-driven
+
+# calibration:
+#   crowd_confidence:
+#     enabled: false  # Disable completely
+
+# ----------------------------------------------------------------------------
+# OPTION 4: REDUCE CROWD WEIGHT (COMPROMISE)
+# ----------------------------------------------------------------------------
+# Use this if:
+# - You want to keep crowd wisdom but reduce its influence
+# - You want bot's calculation to have more weight
+# - You want gradual change instead of on/off
+#
+# Expected Performance:
+# - DOWN trends: 88-90% WR (slight decrease from 91%)
+# - UP trends: 60-65% WR (moderate improvement from 53%)
+# - Balanced approach
+
+# calibration:
+#   crowd_confidence:
+#     enabled: true
+#     disabled_for_directions: []  # Keep blending for all directions
+#     max_market_weight: 0.4  # Reduce from 0.8 → trust bot 60%
+#     min_market_weight: 0.2  # Reduce from 0.6 → trust bot 80%
+
+# ----------------------------------------------------------------------------
+# OPTION 5: KEEP CURRENT SETTINGS (NO CHANGE)
+# ----------------------------------------------------------------------------
+# Use this if:
+# - You're in a bear market and only DOWN trends matter
+# - You're happy with 91% WR on DOWN trends
+# - You don't care about UP trend performance
+#
+# Current Performance:
+# - DOWN trends: 91% WR (excellent, crowd helps)
+# - UP trends: 53% WR (poor, crowd hurts)
+
+# calibration:
+#   crowd_confidence:
+#     enabled: true
+#     disabled_for_directions: []  # Blend all directions
+#     max_market_weight: 0.8
+#     min_market_weight: 0.6
+
+# ============================================================================
+# TESTING RECOMMENDATION
+# ============================================================================
+#
+# 1. Start with OPTION 1 (disable UP blending)
+#    - This gives you best of both worlds
+#    - Keeps DOWN performance high
+#    - Improves UP performance
+#
+# 2. Monitor for 3-7 days:
+#    python3 << 'EOF'
+#    import pandas as pd
+#    df = pd.read_csv('data/negative_edges/skipped_trades.csv')
+#    recent = df[df['timestamp'] > '2026-02-11'].copy()
+#
+#    for trend in ['up', 'down']:
+#        t = recent[recent['momentum_direction'] == trend]
+#        won = (t['would_have_won'] == 'True').sum()
+#        print(f"{trend.upper()}: {won}/{len(t)} = {won/len(t)*100:.1f}% WR")
+#    EOF
+#
+# 3. If UP trends improve to 70%+:
+#    - Keep OPTION 1
+#    - You've fixed the problem!
+#
+# 4. If UP trends don't improve:
+#    - Try OPTION 3 (disable completely)
+#    - There may be a deeper issue with UP trend logic
+#
+# ============================================================================

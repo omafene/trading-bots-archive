@@ -1,0 +1,149 @@
+import logging
+from typing import List, Dict, Optional
+from collections import deque
+import time
+
+logger = logging.getLogger(__name__)
+
+class EdgeDetector:
+    def __init__(self, spot_feed, momentum_analyzer, config: Dict):
+        self.spot_feed = spot_feed
+        self.momentum = momentum_analyzer
+        self.config = config
+        self.strat = config['strategy']
+        self.traded_tickers = set()
+        
+        # --- NEW: RTI History for 60-second Smoothing ---
+        # Stores { 'BTC': deque([price1, price2...], maxlen=12) }
+        # Assuming 5s update interval, 12 samples = 60 seconds
+        self.rti_history = {} 
+        self.samples_needed = 12 
+
+    def reset_locks(self):
+        self.traded_tickers.clear()
+        logger.info("♻️ Ticker locks reset - memory cleared for new hour")
+
+    def _get_smoothed_rti(self, symbol: str, current_rti: float) -> float:
+        """Implements the 60-second averaging rule used by Kalshi for settlement."""
+        if symbol not in self.rti_history:
+            self.rti_history[symbol] = deque(maxlen=self.samples_needed)
+        
+        self.rti_history[symbol].append(current_rti)
+        
+        # Return the simple moving average of the last 60 seconds
+        return sum(self.rti_history[symbol]) / len(self.rti_history[symbol])
+
+    def analyze_market(self, market: Dict) -> Optional[Dict]:
+        symbol, ticker = market['symbol'], market['ticker']
+        
+        if self.strat.get('ticker_lock_enabled', True) and ticker in self.traded_tickers:
+            return None
+
+        # --- FIX: Match your specific spot_feed method names ---
+        raw_rti = market.get('last_price')
+        if not raw_rti:
+            # Fallback to the specific BTC/ETH methods in your spot_feed
+            if symbol == 'BTC':
+                raw_rti = self.spot_feed.get_btc_price()
+            elif symbol == 'ETH':
+                raw_rti = self.spot_feed.get_eth_price()
+
+        # --- FIX 1: Use Kalshi RTI instead of external Spot Feed ---
+        # We extract 'last_price' which is the CF RTI on Kalshi
+        #raw_rti = market.get('last_price')
+        #if not raw_rti:
+            # Fallback to spot_feed only if Kalshi data is missing
+            #raw_rti = self.spot_feed.get_last_price(symbol)
+        
+        # --- FIX 2: Apply 60-second Smoothing ---
+        smoothed_price = self._get_smoothed_rti(symbol, raw_rti)
+        
+        # Update momentum using the same smoothed price Kalshi uses
+        self.momentum.update_price_history(symbol, price=smoothed_price)
+        momentum = self.momentum.calculate_momentum(symbol, minutes=15)
+        if not momentum: return None
+
+        # --- FIX 3: Explicit Fee Subtraction ---
+        # Kalshi fees are roughly $0.015 per contract. 
+        # We subtract this PLUS your slippage buffer from the edge.
+        exchange_fee = 0.015 * 100 
+        buffer = (self.strat.get('slippage_buffer', 0.02) * 100) + exchange_fee
+
+        expected_prob = self._get_expected_prob(market, momentum, smoothed_price)
+        if not expected_prob: return None
+
+        # Calculate Edge
+        edge_yes = ((expected_prob - market['yes_ask']) * 100) - buffer
+        edge_no = (((1 - expected_prob) - market['no_ask']) * 100) - buffer
+
+        # ... (rest of the logic remains same) ...
+        if edge_yes > edge_no and edge_yes >= self.strat.get('min_edge_percent', 15.0):
+            side, edge, entry, depth = 'yes', edge_yes, market['yes_ask'], market['yes_ask_size']
+        elif edge_no >= self.strat.get('min_edge_percent', 15.0):
+            side, edge, entry, depth = 'no', edge_no, market['no_ask'], market['no_ask_size']
+        else: return None
+
+        # Standard Safety Gates
+        if self.strat.get('price_floor_enabled', True) and entry < self.strat.get('min_entry_price', 0.10):
+            return None
+        if self.strat.get('liquidity_gate_enabled', True) and depth < self.strat.get('min_order_book_depth', 5):
+            return None
+
+        expected_win_prob = expected_prob if side == 'yes' else (1 - expected_prob)
+        if expected_win_prob < self.strat.get('min_expected_probability', 0.60): return None
+        
+        signal_strength = self._calculate_signal_strength(edge, momentum, expected_win_prob)
+
+        # Hard Signal Strength Filter
+        min_signal = self.strat.get('min_signal_strength', 0)
+        if signal_strength < min_signal:
+            return None
+
+        expected_roi = ((expected_win_prob - entry) / entry) * 100 if entry > 0 else 0
+
+        logger.info(f"🎯 EDGE: {ticker} | {side.upper()} @ {entry:.0%} | Edge: {edge:.1f}% | Signal: {signal_strength:.1f}/100")
+
+        return {
+            **market, 'expected_probability': expected_prob, 'edge_percent': edge,
+            'recommended_side': side, 'entry_price': entry, 'expected_win_prob': expected_win_prob,
+            'expected_roi': expected_roi, 'depth': depth, 'momentum': momentum,
+            'signal_strength': signal_strength, 'market_probability': entry
+        }
+
+    def _get_expected_prob(self, market, momentum, smoothed_price):
+        """Passes the smoothed price into the probability model."""
+        m_type = market['market_type']
+        # We modify your momentum calculator to accept the 'smoothed_price'
+        return self.momentum.calculate_expected_probability(
+            market['symbol'], 
+            m_type, 
+            market.get('threshold'), 
+            15,
+            current_price=smoothed_price
+        )
+
+    def _calculate_signal_strength(self, edge, momentum, expected_prob):
+        # (Your v5.0 Sniper logic remains here)
+        edge_capped = min(edge, 20)
+        edge_score = (edge_capped / 20) * 50
+        prob_score = max(0, (expected_prob - 0.5) * 2) * 25
+        
+        mom_pct = abs(momentum.get('percent_change', 0))
+        if 0.5 <= mom_pct <= 2.0: mom_score = 10
+        elif mom_pct < 0.5: mom_score = mom_pct * 20
+        else: mom_score = max(0, 10 - (mom_pct - 2.0) * 5)
+
+        trend_val = abs(momentum.get('trend_strength', 0))
+        trend_penalty = 0
+        if trend_val > 0.65:
+            trend_penalty = ((trend_val - 0.65) / 0.35)**2 * 25 # Lowered to 25 as discussed
+            
+        total_signal = (edge_score + prob_score + mom_score) - trend_penalty
+        return max(0, min(100, round(total_signal, 1)))
+
+    def scan_for_edges(self, markets: List[Dict]) -> List[Dict]:
+        opportunities = []
+        for market in markets:
+            opp = self.analyze_market(market)
+            if opp: opportunities.append(opp)
+        return sorted(opportunities, key=lambda x: x['edge_percent'], reverse=True)
