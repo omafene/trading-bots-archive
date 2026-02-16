@@ -1,0 +1,198 @@
+# ═══════════════════════════════════════════════════════════════
+#  KALSHI HYBRID BOT - UNIFIED STRATEGY CONFIGURATION
+# ═══════════════════════════════════════════════════════════════
+
+# API Configuration
+api:
+  base_url: "https://api.elections.kalshi.com/trade-api/v2"
+  demo_url: "https://demo-api.kalshi.co/trade-api/v2"
+  use_demo: false
+  timeout: 10
+
+# Capital Management
+capital:
+  total_capital: 1000
+  max_daily_loss: 200
+  max_weekly_loss: 500
+
+# Bot Control
+bot:
+  name: "Kalshi Hybrid Bot"
+  version: "1.0"
+  paused: true  # Set false to execute real trades (CURRENTLY IN PAPER TRADING MODE)
+  scan_interval_seconds: 10
+
+# ═══════════════════════════════════════════════════════════════
+#  STRATEGY CONFIGURATION - HYBRID MODE
+# ═══════════════════════════════════════════════════════════════
+
+strategy:
+  mode: "hybrid"  # Options: "lottery", "balanced", "hybrid"
+
+  # === PRICE RANGE (Defines strategy behavior) ===
+  entry_price_range:
+    min: 0.05  # Lottery tickets start here
+    max: 0.60  # Balanced trades end here
+    # Hybrid mode: Takes BOTH lottery ($0.05-0.15) AND balanced ($0.40-0.60)
+
+  # Supported symbols
+  symbols: ["BTC", "ETH", "SOL", "XRP"]
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 1: UNIVERSAL FILTERS
+  # ═══════════════════════════════════════════════════════════════
+
+  # Time Window
+  time_window:
+    min_minutes_to_close: 8
+    max_minutes_to_close: 12
+    reason: "Avoid early noise (>12min) and late randomness (<8min)"
+
+  # Liquidity Requirements
+  liquidity:
+    min_contracts_available: 100
+    min_total_volume: 200
+    reason: "Ensure fill without slippage"
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 2: MOMENTUM FILTERS
+  # ═══════════════════════════════════════════════════════════════
+
+  momentum:
+    min_alignment_pct: 0.3  # Need >0.3% momentum in bet direction
+    min_trend_quality_r2: 0.60  # R² > 0.60 for clean trends
+    lookback_minutes: 15
+    reason: "Only trade clear directional moves"
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 3: VOLUME CONFIRMATION (Gemini Filter)
+  # ═══════════════════════════════════════════════════════════════
+
+  volume:
+    enabled: true
+    min_volume_ratio: 1.2  # Current 5min vol > 1.2x avg 15min vol
+    lookback_minutes: 15
+    reason: "Volume must confirm price move - no fake-outs"
+
+  orderbook:
+    enabled: true
+    min_imbalance: 0.15  # Need 15% more depth favoring your side
+    depth_levels: 10  # Check top 10 price levels
+    reason: "Order book pressure must support direction"
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 4: REGIME DETECTION (Gemini Filter)
+  # ═══════════════════════════════════════════════════════════════
+
+  regime:
+    enabled: true
+    allowed_regimes: ["trending"]  # Skip "mean_reverting" and "choppy"
+
+    # Trend Detection (1-hour timeframe)
+    trend:
+      lookback_minutes: 60
+      min_r2: 0.70  # Strong trend required
+      min_slope_pct: 0.3  # Minimum trend strength
+
+    # Volatility Limits
+    volatility:
+      max_atr_pct: 2.0  # Skip if ATR > 2% of price
+      lookback_periods: 14
+
+    reason: "Only trade in favorable market conditions"
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 5: PROBABILITY MODEL
+  # ═══════════════════════════════════════════════════════════════
+
+  probability:
+    model: "v2_calibrated"
+
+    # Adaptive thresholds based on entry price
+    lottery_mode:  # For prices $0.05-$0.20
+      min_probability: 0.25
+      max_probability: 0.50
+      target_win_rate: 0.40
+
+    balanced_mode:  # For prices $0.35-$0.60
+      min_probability: 0.60
+      max_probability: 0.85
+      target_win_rate: 0.65
+
+    # Auto-select based on entry price
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 6: POSITION SIZING (Adaptive)
+  # ═══════════════════════════════════════════════════════════════
+
+  position_sizing:
+    method: "kelly_adaptive"
+    kelly_fraction: 0.25  # Use 25% of full Kelly for safety
+
+    lottery_mode:  # For prices $0.05-$0.20
+      base_position: 10
+      max_position: 20
+      max_open_positions: 5
+      reason: "Small positions, high diversification"
+
+    balanced_mode:  # For prices $0.35-$0.60
+      base_position: 50
+      max_position: 100
+      max_open_positions: 3
+      reason: "Larger positions, concentrated bets"
+
+  # ═══════════════════════════════════════════════════════════════
+  #  LAYER 7: EXECUTION PROTECTION (Gemini Filter)
+  # ═══════════════════════════════════════════════════════════════
+
+  execution:
+    max_spread_cents: 5  # Skip if bid-ask spread > 5¢
+    order_type: "limit"  # Use limit orders
+    order_timeout_seconds: 2  # Cancel if not filled in 2s
+    max_slippage_cents: 2  # Maximum acceptable slippage
+    retry_on_partial_fill: false
+    reason: "Protect against poor fills"
+
+  # ═══════════════════════════════════════════════════════════════
+  #  RISK MANAGEMENT
+  # ═══════════════════════════════════════════════════════════════
+
+  risk:
+    max_position_pct: 0.10  # Max 10% of capital per trade
+    max_daily_trades: 20
+    max_consecutive_losses: 10  # Pause after 10 straight losses
+
+    # Stop loss (only for balanced mode)
+    stop_loss:
+      lottery_mode: null  # No stop loss - max loss is entry price
+      balanced_mode:
+        trailing_stop_pct: 0.30  # 30% trailing stop
+        time_based_stop_minutes: 5  # Exit if wrong after 5 min
+
+# ═══════════════════════════════════════════════════════════════
+#  NOTIFICATIONS
+# ═══════════════════════════════════════════════════════════════
+
+notifications:
+  telegram:
+    enabled: true  # Set to true and add bot token
+    bot_token: 123456789:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    chat_id: 123456789
+
+  alerts:
+    on_trade: true
+    on_win: true
+    on_loss: false  # Too noisy for lottery mode
+    on_daily_summary: true
+    on_error: true
+
+# ═══════════════════════════════════════════════════════════════
+#  LOGGING
+# ═══════════════════════════════════════════════════════════════
+
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "logs/hybrid_bot.log"
+  console: true
+  max_file_size_mb: 50
+  backup_count: 5
