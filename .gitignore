@@ -1,0 +1,40 @@
+# credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+config.json
+config.ini
+
+# runtime
+logs/
+data/
+*.log
+*.pkl
+*.csv
+*.db
+*.sqlite
+
+# deps / caches
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.claude/
+
+# backups
+backups/
+backup*/
+*.bak*
+*.backup*
+*.save*
+*.old
+*.broken*
+*.orig
+*.tar.gz
+
+# keep the blanked IBC config
+!04-ibkr-gateway-ibc/config.ini
